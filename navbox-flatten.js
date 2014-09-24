@@ -38,7 +38,7 @@ function navbox_subgroup_data(subgroup) {
 		// check has navbox-title
 		var el = subgroup.find('>tbody>tr>.navbox-title');
 		if (el.length) {
-			if (el.find('>.mw-collapsible-toggle').length) {
+			// if (el.find('>.mw-collapsible-toggle').length) {
 				// headline
 				var headline_el = el.find('>span:not(.mw-collapsible-toggle)');
 				
@@ -52,9 +52,9 @@ function navbox_subgroup_data(subgroup) {
 					// clear line-height of '日本2014年冬季动画' in http://zh.moegirl.org/Template:%E6%97%A5%E6%9C%AC2014%E5%B9%B4%E5%8A%A8%E7%94%BB
 					
 					DATA['title'] = navbox_title_el.html();
-				} else {
-					DATA['title'] = headline_el.html();
-				}
+				// } else {
+				// 	DATA['title'] = headline_el.html();
+				// }
 			} else {
 				DATA['title'] = el.html();
 			}
@@ -204,8 +204,7 @@ function navbox(selector) {
 	});
 }
 
-// delay 500ms
-window.setTimeout(navbox, 500);
+navbox();
 // $('head').first().append('<link rel="stylesheet" href="http://127.0.0.1/moegirl-navbox-flatten/navbox-flatten.css">');
 $('body').append('<style>._wrapper{position:relative;margin-top:10px;line-height:1.7;border:1px solid #aaa;padding:3px;clear:both}._subgroup{border:0 solid #e6e6ff;border-left-width:3px}._title{font-weight:700;background:#e6e6ff;margin-bottom:2px;padding-left:1em}._nav{font-size:80%;word-spacing:.8em;border-top:1px solid #aaa}._content{padding-left:1em;margin-bottom:2px}._content:last-child{margin-bottom:0}._wrapper>._subgroup{border-color:#ccf;border-width:0 3px 3px}._wrapper>._subgroup>._title{background:#ccf}._wrapper>._subgroup>._content>._subgroup{border-color:#ddf}._wrapper>._subgroup>._content>._subgroup>._title{background:#ddf}._collapsible>._title{position:relative}._collapsible>._content{display:none}._open>._content{display:block}._collapsible>._title{padding-left:3em;margin-bottom:0;min-height:20px}._open>._title{margin-bottom:2px}._toggle{position:absolute;left:0;top:0;bottom:0;font-family:monospace;color:#ba0000;font-size:90%;width:3.5em}._toggle>span{position:absolute;left:0;right:0;top:50%;text-align:center;transform:translateY(-50%);-webkit-transform:translateY(-50%)}._collapsible>._title>._toggle>._status-open{display:none}._collapsible>._title>._toggle>._status-close,._open>._title>._toggle>._status-open{display:inline}._open>._title>._toggle>._status-close{display:none}</style>'.replace(/_/g, class_prefix));
 
