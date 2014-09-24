@@ -16,6 +16,11 @@
 	margin-bottom: 2px;
 	padding-left: 1em;
 }
+.moegirl-flatten-navbox-nav {
+	font-size: 80%;
+	word-spacing: .8em;
+	border-top: 1px solid #aaa;
+}
 .moegirl-flatten-navbox-content {
 	padding-left: 1em;
 	margin-bottom: 2px;
@@ -76,6 +81,7 @@
 	top: 50%;
 	text-align: center;
 	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
 }
 .moegirl-flatten-navbox-collapsible > .moegirl-flatten-navbox-title > .moegirl-flatten-navbox-toggle > .moegirl-flatten-navbox-status-open {
 	display: none;

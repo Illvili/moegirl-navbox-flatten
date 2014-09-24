@@ -5,6 +5,24 @@
 
 ;(function () { $(function () {
 
+var custome_style_regex = /^\s*(background|color|font)/i;
+function navbox_filter_style(el) {
+	var style = $(el).attr('style');
+	if (!style) return;
+	
+	var custome_styles = [];
+	style = style.split(';');
+	$.each(style, function () {
+		if (!this.length) return;
+		
+		if (custome_style_regex.test(this)) {
+			custome_styles.push(this);
+		}
+	});
+	
+	return custome_styles.join(';');
+}
+
 function navbox_subgroup_data(subgroup) {
 	subgroup = $(subgroup);
 	
@@ -25,16 +43,20 @@ function navbox_subgroup_data(subgroup) {
 				var headline_el = el.find('>span:not(.mw-collapsible-toggle)');
 				
 				var navbox_title_el = headline_el.children();
-				if (!navbox_title_el.find('small').length && navbox_title_el.is('div') && 'text-align:center; line-height:10pt' == navbox_title_el.attr('style')) {
+				if (navbox_title_el.find('small').length) {
+					// small nav like <-2013  xxx  2015->
+					var elements = navbox_title_el.html().split('<br>');
+					DATA['title'] = elements[0];
+					DATA['nav'] = $(elements[1]).find('small').html();
+				} else if (navbox_title_el.is('div') && 'text-align:center; line-height:10pt' == navbox_title_el.attr('style')) {
 					// clear line-height of '日本2014年冬季动画' in http://zh.moegirl.org/Template:%E6%97%A5%E6%9C%AC2014%E5%B9%B4%E5%8A%A8%E7%94%BB
-					// but keep navigator in it (!find('small').length)
 					
 					DATA['title'] = navbox_title_el.html();
 				} else {
 					DATA['title'] = headline_el.html();
 				}
 			} else {
-				DATA['title'] = el;
+				DATA['title'] = el.html();
 			}
 		} // /check has navbox-title
 		
@@ -50,15 +72,9 @@ function navbox_subgroup_data(subgroup) {
 		// check has navbox-group
 		var el = subgroup.find('>.navbox-group');
 		if (el.length) {
-			var style = el.attr('style');
-			if ('string' == typeof style) {
-				// style = style.replace(';padding-left:0em;padding-right:0em;width:9em;;', '');
-				var delimiter_index = style.indexOf(';;');
-				if (-1 != delimiter_index) style = style.substring(delimiter_index + 2);
-				
-				if (!!style) {
-					DATA['titleStyle'] = style;
-				}
+			var style = navbox_filter_style(el);
+			if (!!style) {
+				DATA['titleStyle'] = style;
 			}
 			
 			var navbox_group_el = el.children();
@@ -80,15 +96,9 @@ function navbox_subgroup_data(subgroup) {
 					DATA['subgroup'] = child_data.subgroup;
 				}
 			} else {
-				var style = el.attr('style');
-				if ('string' == typeof style) {
-					// style = style.replace('text-align:left;border-left:2px solid #fdfdfd;width:100%;padding:0px;line-height:1.4em;;;', '');
-					var delimiter_index = style.indexOf(';;');
-					if (-1 != delimiter_index) style = style.substring(delimiter_index + 2);
-					
-					if (!!style) {
-						DATA['contentStyle'] = style;
-					}
+				var style = navbox_filter_style(el);
+				if (!!style) {
+					DATA['contentStyle'] = style;
 				}
 				
 				DATA['content'] = el.html();
@@ -133,6 +143,14 @@ function navbox_subgroup_build(parent, subgroup_data) {
 		
 		if (!!subgroup_data.collapsible) {
 			title_el.append('<div class="' + class_prefix + 'toggle"><span class="' + class_prefix + 'status-close">[展开]</span><span class="' + class_prefix + 'status-open">[折叠]</span></div>');
+		}
+		
+		if (!!subgroup_data.nav) {
+			var nav_el = $('<div class="' + class_prefix + 'nav" />');
+			title_el.append(nav_el);
+			title_el.addClass(class_prefix + 'has-nav');
+			
+			nav_el.html(subgroup_data.nav);
 		}
 	}
 	
@@ -186,6 +204,6 @@ function navbox(selector) {
 
 navbox('.navbox');
 // $('head').first().append('<link rel="stylesheet" href="http://127.0.0.1/moegirl-navbox-flatten/navbox-flatten.css">');
-$('body').append('<style>._wrapper{position:relative;margin-top:10px;line-height:1.7;border:1px solid #aaa;padding:3px;clear:both}._subgroup{border:0 solid #e6e6ff;border-left-width:3px}._title{font-weight:700;background:#e6e6ff;margin-bottom:2px;padding-left:1em}._content{padding-left:1em;margin-bottom:2px}._content:last-child{margin-bottom:0}._wrapper>._subgroup{border-color:#ccf;border-width:0 3px 3px}._wrapper>._subgroup>._title{background:#ccf}._wrapper>._subgroup>._content>._subgroup{border-color:#ddf}._wrapper>._subgroup>._content>._subgroup>._title{background:#ddf}._collapsible>._title{position:relative}._collapsible>._content{display:none}._open>._content{display:block}._collapsible>._title{padding-left:3em;margin-bottom:0;min-height:20px}._open>._title{margin-bottom:2px}._toggle{position:absolute;left:0;top:0;bottom:0;font-family:monospace;color:#ba0000;font-size:90%;width:3.5em}._toggle>span{position:absolute;left:0;right:0;top:50%;text-align:center;transform:translateY(-50%)}._collapsible>._title>._toggle>._status-open{display:none}._collapsible>._title>._toggle>._status-close,._open>._title>._toggle>._status-open{display:inline}._open>._title>._toggle>._status-close{display:none}</style>'.replace(/_/g, class_prefix));
+$('body').append('<style>._wrapper{position:relative;margin-top:10px;line-height:1.7;border:1px solid #aaa;padding:3px;clear:both}._subgroup{border:0 solid #e6e6ff;border-left-width:3px}._title{font-weight:700;background:#e6e6ff;margin-bottom:2px;padding-left:1em}._nav{font-size:80%;word-spacing:.8em;border-top:1px solid #aaa}._content{padding-left:1em;margin-bottom:2px}._content:last-child{margin-bottom:0}._wrapper>._subgroup{border-color:#ccf;border-width:0 3px 3px}._wrapper>._subgroup>._title{background:#ccf}._wrapper>._subgroup>._content>._subgroup{border-color:#ddf}._wrapper>._subgroup>._content>._subgroup>._title{background:#ddf}._collapsible>._title{position:relative}._collapsible>._content{display:none}._open>._content{display:block}._collapsible>._title{padding-left:3em;margin-bottom:0;min-height:20px}._open>._title{margin-bottom:2px}._toggle{position:absolute;left:0;top:0;bottom:0;font-family:monospace;color:#ba0000;font-size:90%;width:3.5em}._toggle>span{position:absolute;left:0;right:0;top:50%;text-align:center;transform:translateY(-50%);-webkit-transform:translateY(-50%)}._collapsible>._title>._toggle>._status-open{display:none}._collapsible>._title>._toggle>._status-close,._open>._title>._toggle>._status-open{display:inline}._open>._title>._toggle>._status-close{display:none}</style>'.replace(/_/g, class_prefix));
 
 }); })();
