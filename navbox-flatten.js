@@ -89,7 +89,7 @@ function navbox_subgroup_data(subgroup) {
 		var el = subgroup.find('>.navbox-list');
 		if (el.length) {
 			if (el.find('>.navbox-subgroup').length) {
-				var child_data = navbox_subgroup_data(el.find('.navbox-subgroup'));
+				var child_data = navbox_subgroup_data(el.find('>.navbox-subgroup'));
 				if (!!child_data.title) {
 					DATA['subgroup'] = [child_data];
 				} else {
