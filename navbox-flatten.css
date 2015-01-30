@@ -5,6 +5,9 @@
 	border: 1px solid #aaa;
 	padding: 3px;
 	clear: both;
+	
+	/* fix touch gray flicker */
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .moegirl-flatten-navbox-subgroup {
 	border: 0 solid #e6e6ff;
@@ -70,8 +73,8 @@
 	top: 0;
 	bottom: 0;
 	font-family: monospace;
-	color: #ba0000;
-	font-size: 90%;
+	color: #079b2b;
+	font-size: 110%;
 	width: 3.5em;
 }
 .moegirl-flatten-navbox-toggle > span {
