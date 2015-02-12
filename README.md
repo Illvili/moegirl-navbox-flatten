@@ -3,6 +3,11 @@ moegirl-navbox-flatten
 
 萌百导航扁平化
 
+请注意
+------
+**此版本库不在更新，所有萌百排版引擎已迁移至**
+[moegirl-app-style-engine](https://github.com/Illvili/moegirl-app-style-engine)
+
 渲染不对/丢失了内容/看着难受/应该加个XX功能
 -------------------------------------------
 请提交至Issues中
